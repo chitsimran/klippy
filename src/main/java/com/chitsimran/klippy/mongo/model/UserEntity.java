@@ -15,7 +15,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Document("clips")
+@Document("users")
 public class UserEntity extends BaseEntity {
 
     @NonNull
