@@ -1,5 +1,6 @@
 package com.chitsimran.klippy.controller;
 
+import com.chitsimran.klippy.constants.AppConstants;
 import com.chitsimran.klippy.constants.URIConstants;
 import com.chitsimran.klippy.dto.AddUserDTO;
 import com.chitsimran.klippy.dto.BaseResponseDTO;
@@ -24,12 +25,12 @@ public class UserController extends BaseController {
     @PostMapping(URIConstants.USERS_ROOT_URL)
     public BaseResponseDTO<Object> addUser(@RequestBody AddUserDTO addUserDto) {
         userService.addUser(addUserDto);
-        return new BaseResponseDTO<>("success");
+        return new BaseResponseDTO<>(AppConstants.RESPONSE_SUCCESS);
     }
 
     @GetMapping(URIConstants.USERS_ROOT_URL)
     public BaseResponseDTO<Boolean> doesUserExists(@RequestParam("userName") String userName) {
         Boolean isUserPresent = userService.isUserPresent(userName);
-        return new BaseResponseDTO<>(isUserPresent, "success");
+        return new BaseResponseDTO<>(isUserPresent, AppConstants.RESPONSE_SUCCESS);
     }
 }

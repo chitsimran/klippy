@@ -1,5 +1,6 @@
 package com.chitsimran.klippy.mongo.model;
 
+import com.mongodb.lang.NonNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,6 +18,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 @Document("clips")
 public class ClipDataEntity extends BaseEntity {
     @DBRef
+    @NonNull
     @Field("user")
     private UserEntity userEntity;
 
