@@ -12,7 +12,7 @@ import java.io.Serializable;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AddUserDTO implements Serializable {
+public class UserDTO implements Serializable {
     @JsonProperty("user_name")
     private String userName;
 

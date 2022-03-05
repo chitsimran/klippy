@@ -2,8 +2,8 @@ package com.chitsimran.klippy.controller;
 
 import com.chitsimran.klippy.constants.AppConstants;
 import com.chitsimran.klippy.constants.URIConstants;
-import com.chitsimran.klippy.dto.AddUserDTO;
 import com.chitsimran.klippy.dto.BaseResponseDTO;
+import com.chitsimran.klippy.dto.UserDTO;
 import com.chitsimran.klippy.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,8 +23,8 @@ public class UserController extends BaseController {
     }
 
     @PostMapping(URIConstants.USERS_ROOT_URL)
-    public BaseResponseDTO<Object> addUser(@RequestBody AddUserDTO addUserDto) {
-        userService.addUser(addUserDto);
+    public BaseResponseDTO<Object> addUser(@RequestBody UserDTO userDto) {
+        userService.addUser(userDto);
         return new BaseResponseDTO<>(AppConstants.RESPONSE_SUCCESS);
     }
 
@@ -32,5 +32,11 @@ public class UserController extends BaseController {
     public BaseResponseDTO<Boolean> doesUserExists(@RequestParam("userName") String userName) {
         Boolean isUserPresent = userService.isUserPresent(userName);
         return new BaseResponseDTO<>(isUserPresent, AppConstants.RESPONSE_SUCCESS);
+    }
+
+    @GetMapping(URIConstants.LOGIN_USER)
+    public BaseResponseDTO<Boolean> loginUser(@RequestBody UserDTO userDTO) {
+        Boolean loginSuccess = userService.loginUser(userDTO);
+        return new BaseResponseDTO<>(loginSuccess, AppConstants.RESPONSE_SUCCESS);
     }
 }
