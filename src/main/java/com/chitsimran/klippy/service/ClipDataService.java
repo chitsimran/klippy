@@ -36,6 +36,7 @@ public class ClipDataService {
             throw new UserNotFoundException(userName);
         }
         List<ClipDataEntity> clipDataEntities = clipDataRepository.findByUserEntity(userEntity.get());
+        log.info("USER_CLIPS_FETCHED: for user: {}, clips: {}", userName, JsonUtil.toJson(clipDataEntities));
         return buildClipDataListFromClipDataEntityList(clipDataEntities);
     }
 
@@ -68,6 +69,7 @@ public class ClipDataService {
         Optional<UserEntity> userEntity = userRepository.findByUserName(userName);
         if (!userEntity.isPresent())
             throw new UserNotFoundException(userName);
+        log.info("DELETING_USER_CLIP: for user: {}, clip id: {}", userName, id);
         clipDataRepository.deleteById(new ObjectId(id));
     }
 }
