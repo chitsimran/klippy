@@ -1,6 +1,15 @@
+import { BrowserRouter } from "react-router-dom";
+import { ThemeProvider } from '@mui/system';
+import AppRoutes from "./components/AppRoutes";
+import { theme } from "./theme";
+
 const App = () => {
     return (
-        <div className="App">klippy</div>
+        <BrowserRouter>
+            <ThemeProvider theme={theme}>
+                <AppRoutes />
+            </ThemeProvider>
+        </BrowserRouter>
     );
 }
 
