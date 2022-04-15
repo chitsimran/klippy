@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const LoginPageContainer = styled.div`
-    background-color: #1A1A1C;
+    background-color: var(--theme-dark);
     height: 100%;
     width: 100%;
     position: absolute;
