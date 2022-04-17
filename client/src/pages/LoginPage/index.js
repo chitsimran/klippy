@@ -63,7 +63,11 @@ const LoginPage = () => {
         .then(data => {
             if (data?.data?.data) {
                 dispatch(setIsLoggedIn(true));
-                navigate('/');
+                navigate('/', {
+                    state: {
+                        userName: userName
+                    }
+                });
             } else {
                 setIsError(true);
                 setErrorText('Wrong password. Please try again');
