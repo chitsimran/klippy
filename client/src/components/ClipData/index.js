@@ -1,70 +1,22 @@
-import { TextField } from '@mui/material';
+import { Button, TextField } from '@mui/material';
 import React from 'react';
 import { useEffect } from 'react';
 import { useState } from 'react';
-import { ClipDataContainer, ClipDataInputContainer, ClipNumberBlockContainer, ClipNumberContainer } from './styles';
+import { AddCLipButtonContainer, ClipDataContainer, ClipDataInputContainer, ClipLeftBlockContainer, ClipNumberBlockContainer, ClipNumberContainer } from './styles';
+import axios from 'axios';
 
-const rawData = [
-    {
-        id: '1',
-        user_name: 'singh',
-        data: 'Test 1'
-    },
-    {
-        id: '3',
-        user_name: 'singh',
-        data: 'Test scsohdoqiawjodlk1'
-    },
-    {
-        id: '5',
-        user_name: 'singh',
-        data: 'Tesweufowincoiwneoinwocneoicwnet 1'
-    },
-    {
-        id: '10',
-        user_name: 'singh',
-        data: 'Teswe2 rfdqa'
-    },
-    {
-        id: '17',
-        user_name: 'singh',
-        data: 'Q1'
-    },
-    {
-        id: '18',
-        user_name: 'singh',
-        data: 'Tes vnfidohishdoihot 1'
-    },
-    {
-        id: '32',
-        user_name: 'singh',
-        data: ' scsohdoqiawjodlk1'
-    },
-    {
-        id: '51',
-        user_name: 'singh',
-        data: 'wnib hio 1'
-    },
-    {
-        id: '102',
-        user_name: 'singh',
-        data: ' asw rfdqa'
-    },
-    {
-        id: '107',
-        user_name: 'singh',
-        data: 'dj1'
-    }
-];
+//TODO Add Snackbar
+//TODO Implement Update method
+//TODO Refractor code
+//TODO make ui better
 
-const ClipNumberBlock = ({ title, id, setClipNumber }) => {
+const ClipNumberBlock = ({ title, id, setClipNumber, clipNumber }) => {
     const handleClipNumberClick = () => {
         setClipNumber(title - 1);
-        console.log(title - 1);
     };
 
     return (
-        <ClipNumberBlockContainer onClick={handleClipNumberClick}>
+        <ClipNumberBlockContainer isSelected={clipNumber === title - 1} onClick={handleClipNumberClick}>
             {
                 title
             }
@@ -72,33 +24,133 @@ const ClipNumberBlock = ({ title, id, setClipNumber }) => {
     );
 };
 
-const ClipData = ({ data = rawData }) => {
+const ClipData = ({ userName }) => {
+    const [data, setData] = useState([]);
     const [clipNumber, setClipNumber] = useState(0);
     const [clipData, setClipData] = useState(data ? data[clipNumber]?.data : '');
+    const [isAdd, setIsAdd] = useState(false);
+
+    useEffect(() => {
+        fetchUserClips();
+    }, [userName]);
+
+    useEffect(() => {
+        setClipData(data[clipNumber]?.data ?? '');
+        setIsAdd(!data[clipNumber]?.id);
+    }, [clipNumber, data]);
 
     const handleClipDataInputChange = e => {
         setClipData(e.target.value);
     };
 
-    useEffect(() => {
-        setClipData(data[clipNumber]?.data);
-    }, [clipNumber, data]);
+    const handleAddClipButtonClick = () => {
+        data.push({ data: '' });
+        setClipNumber(data.length - 1);
+    }; 
+
+    const fetchUserClips = () => {
+        axios({
+            url: `/api/v1/users/${userName}/clips`,
+            method: 'get',
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(data => {
+            console.log(data.data);
+            setData(data.data?.data);
+        })
+        .catch(error => {
+            console.log('error fetching user clips');
+            console.log(error.data);
+        });
+    };
+
+    const handleAddClick = () => {
+        axios({
+            url: `/api/v1/users/${userName}/clips`,
+            method: 'post',
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Content-Type': 'application/json',
+            },
+            data: {
+                user_name: userName,
+                data: clipData
+            }
+        })
+        .then(data => {
+            console.log('successfully added clipdata');
+            fetchUserClips();
+        })
+        .catch(error => {
+            console.log('error adding clipdata');
+            console.log(error);
+        });
+    };
+
+    const handleUpdateClick = () => {
+        axios({
+            url: `/api/v1/users/${userName}/clips`,
+            method: 'put',
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Content-Type': 'application/json',
+            },
+            data: {
+                user_name: userName,
+                data: clipData,
+                id: data[clipNumber].id
+            }
+        })
+        .then(data => {
+            console.log('successfully updated clipdata');
+        })
+        .catch(error => {
+            console.log('error updating clipdata');
+            console.log(error);
+        });
+    };
+
+    const handleDeleteClick = () => {
+        axios({
+            url: `/api/v1/users/${userName}/clips?id=${data[clipNumber].id}`,
+            method: 'delete',
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => {
+            data.splice(clipNumber, 1);
+            setClipNumber(0);
+            console.log('successfully deleted clipdata');
+        })
+        .catch(error => {
+            console.log('error deleting clipdata');
+            console.log(error);
+        });
+    };
 
     return (
         <ClipDataContainer>
-            <ClipNumberContainer>
-                {
-                    data.map((clip, idx) => {return (
-                        <ClipNumberBlock
-                            title={idx+1}
-                            id={clip.id}
-                            key={clip.id}
-                            setClipNumber={setClipNumber}
-                        />
-                    )})
-                }
-                <ClipNumberBlockContainer title={'+'}>+</ClipNumberBlockContainer>
-            </ClipNumberContainer>
+            <ClipLeftBlockContainer>
+                <ClipNumberContainer>
+                    {
+                        data.map((clip, idx) => {return (
+                            <ClipNumberBlock
+                                title={idx+1}
+                                id={clip.id}
+                                key={clip.id}
+                                clipNumber={clipNumber}
+                                setClipNumber={setClipNumber}
+                            />
+                        )})
+                    }
+                </ClipNumberContainer>
+                <AddCLipButtonContainer onClick={handleAddClipButtonClick}>+</AddCLipButtonContainer>
+            </ClipLeftBlockContainer>
             <ClipDataInputContainer>
                 <TextField
                     id="clipData"
@@ -109,12 +161,19 @@ const ClipData = ({ data = rawData }) => {
                     variant='filled'
                     color='primary'
                     sx={{
-                        backgroundColor: 'var(--theme-light-gray)'
+                        backgroundColor: 'var(--theme-light-gray)',
+                        marginBottom: '20px'
                     }}
                     value={clipData}
                     onChange={e => handleClipDataInputChange(e)}
                     defaultValue={clipData}
                 />
+                { !isAdd && <Button color='primary' variant='outlined' sx={{ float: 'right', marginLeft: '4px' }} onClick={handleDeleteClick}>Delete</Button> }
+                <Button color='primary' variant='contained' sx={{ float: 'right' }} onClick={isAdd ? handleAddClick : handleUpdateClick}>
+                    {
+                        isAdd ? 'Add' : 'Update'
+                    }
+                </Button>
             </ClipDataInputContainer>
         </ClipDataContainer>
     );

@@ -8,7 +8,9 @@ export const ClipDataContainer = styled.div`
 
 export const ClipNumberContainer = styled.div`
     display: inline-block;
-    max-height: 640px;
+    max-height: 580px;
+    min-height: 580px;
+    margin-bottom: 16px;
     overflow-y: scroll;
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none;
@@ -22,7 +24,7 @@ export const ClipNumberContainer = styled.div`
 export const ClipNumberBlockContainer = styled.div`
     height: 80px;
     width: 80px;
-    background-color: var(--theme-neon-blue);
+    background-color: ${props => props.isSelected ? 'var(--theme-neon-blue)' : 'var(--theme-mid-blue)'};
     color: var(--theme-dark);
     text-align: center;
     line-height: 80px;
@@ -37,4 +39,25 @@ export const ClipNumberBlockContainer = styled.div`
 export const ClipDataInputContainer = styled.div`
     width: 1000px;
     margin-right: 80px;
+    margin-bottom: 20px;
+`
+
+export const ClipLeftBlockContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+`
+
+export const AddCLipButtonContainer = styled.div`
+    height: 80px;
+    width: 80px;
+    background-color: var(--theme-neon-blue);
+    color: var(--theme-dark);
+    text-align: center;
+    line-height: 80px;
+    margin-bottom: 4px;
+    border-radius: 50%;
+
+    :hover {
+        cursor: pointer;
+    }
 `
