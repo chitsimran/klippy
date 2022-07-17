@@ -1,5 +1,6 @@
 package com.chitsimran.klippy.service;
 
+import com.chitsimran.klippy.exceptions.ClipDataNotFound;
 import com.chitsimran.klippy.exceptions.UserNotFoundException;
 import com.chitsimran.klippy.mongo.model.ClipDataEntity;
 import com.chitsimran.klippy.mongo.model.UserEntity;
@@ -71,5 +72,17 @@ public class ClipDataService {
             throw new UserNotFoundException(userName);
         log.info("DELETING_USER_CLIP: for user: {}, clip id: {}", userName, id);
         clipDataRepository.deleteById(new ObjectId(id));
+    }
+
+    public void updateClipData(String userName, ClipData clipData) {
+        Optional<UserEntity> userEntity = userRepository.findByUserName(userName);
+        if (!userEntity.isPresent())
+            throw new UserNotFoundException(userName);
+        Optional<ClipDataEntity> clipDataEntity = clipDataRepository.findById(new ObjectId(clipData.getId()));
+        if (!clipDataEntity.isPresent())
+            throw new ClipDataNotFound(userName, clipData.getId());
+        clipDataEntity.get().setClipData(clipData.getData());
+        clipDataRepository.save(clipDataEntity.get());
+        log.info("UPDATE_CLIP: id: {}, data: {}", clipData.getId(), JsonUtil.toJson(clipData.getData()));
     }
 }
