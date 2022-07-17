@@ -35,8 +35,8 @@ public class UserController extends BaseController {
     }
 
     @PostMapping(URIConstants.LOGIN_USER)
-public BaseResponseDTO<Boolean> loginUser(@RequestBody UserDTO userDTO) {
-    Boolean loginSuccess = userService.loginUser(userDTO);
-    return new BaseResponseDTO<>(loginSuccess, AppConstants.RESPONSE_SUCCESS);
-}
+    public BaseResponseDTO<Boolean> loginUser(@RequestBody UserDTO userDTO) {
+        Boolean loginSuccess = userService.loginUser(userDTO);
+        return new BaseResponseDTO<>(loginSuccess, AppConstants.RESPONSE_SUCCESS);
+    }
 }
