@@ -51,4 +51,7 @@ public class UserService {
             return Boolean.FALSE;
         }
     }
+
+    public void test() {
+    }
 }
